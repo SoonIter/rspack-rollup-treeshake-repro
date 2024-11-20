@@ -1,18 +1,58 @@
-# Vue 3 + TypeScript + Vite
+# rspack rollup compare
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+DCE analysis in one big esm file, compared with rollup
 
-## Recommended IDE Setup
+```ts
+// node_modules/@aibee/crc-bmap/lib/bmap.esm.js:9565
+var isOnline = process.env.CRC_BMAP_MODE === 'online';
+var ParkingTypeIconMap3;
+if (isOnline) {
+  ParkingTypeIconMap3 = (init_online(), __toCommonJS(online_exports))
+    .ParkingTypeIconMap;
+} else {
+  ParkingTypeIconMap3 = (init_offline(), __toCommonJS(offline_exports))
+    .ParkingTypeIconMap;
+}
+```
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+```ts
+  source: {
+    define: {
+      'process.env.CRC_BMAP_MODE': JSON.stringify('online'),
+    },
+  },
+```
 
-## Type Support For `.vue` Imports in TS
+```sh
+ni
+npx rsbuild build
+npx vite build
+```
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+## Result
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+rsbuild 3875kb > vite(rollup) 812kb
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+rsbuild
+
+```sh
+ready   Built in 0.95 s (web)
+
+  File (web)                                  Size         Gzip
+  dist-rsbuild/index.html                     0.31 kB      0.22 kB
+  dist-rsbuild/static/js/index.f63e9bd1.js    1.8 kB       0.90 kB
+  dist-rsbuild/static/js/698.df5bb1bd.js      3875.7 kB    1683.1 kB
+
+  Total: 3877.8 kB (gzip: 1684.2 kB)
+```
+
+vite(rollup)
+
+```sh
+vite v4.4.5 building for production...
+✓ 1449 modules transformed.
+dist/index.html            0.45 kB │ gzip:   0.28 kB
+dist/index.js              0.77 kB │ gzip:   0.44 kB
+dist/chunks/crc-bmap.js  812.95 kB │ gzip: 220.61 kB
+✓ built in 3.79s
+```
