@@ -5,17 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
     "@aibee/crc-bmap": "^0.8.33",
-    "vue": "^3.3.4"
+    "vue": "^3.3.4",
+    "terser": "5.36.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.2.3",
+    "terser-webpack-plugin": "5.3.10",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
-    "vue-tsc": "^1.8.5"
+    "@rsbuild/core": "1.1.3"
   }
 }
