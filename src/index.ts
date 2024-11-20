@@ -1,4 +1,5 @@
 // @ts-ignore
-import { BMap } from "@aibee/crc-bmap"
+import { Arrow3 } from './a';
 
-console.log(BMap)
+// @ts-ignore
+console.log(Arrow3);

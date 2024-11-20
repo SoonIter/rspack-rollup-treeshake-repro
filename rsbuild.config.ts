@@ -22,6 +22,13 @@ export default defineConfig({
   //     }
   //   },
   // },
+  tools: {
+    rspack: {
+      optimization: {
+        concatenateModules: false
+      }
+    }
+  },
   source: {
     define: {
       'process.env.CRC_BMAP_MODE': JSON.stringify('online'),
